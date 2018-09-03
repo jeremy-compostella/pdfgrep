@@ -2,6 +2,8 @@
 but for PDF files.  Its usage is similar to the ~grep~ function: using
 the ~next-error~ function gets you to the next matching page...
 
+[[https://melpa.org/#/pdfgrep][https://melpa.org/packages/pdfgrep-badge.svg]]
+
 The ~pdfgrep~ program must be installed on your system.
 
 If the [[https://github.com/politza/pdf-tools][pdf-tools]] module is installed and enabled, when a matching page

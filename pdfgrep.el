@@ -3,8 +3,11 @@
 ;; Copyright (C) 2017-2018 Jérémy Compostella
 
 ;; Author: Jérémy Compostella <jeremy.compostella@gmail.com>
-;; Version: 1.0
-;; Keywords: PDF grep
+;; Created: October 2017
+;; Keywords: extensions mail pdf grep
+;; Homepage: https://github.com/jeremy-compostella/pdfgrep
+;; Package-Version: 1.0
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,6 +26,8 @@
 
 ;; This package provides the Emacs "grep" facilities for the pdfgrep
 ;; program.
+
+;;; Code:
 
 (require 'grep)
 
@@ -62,16 +67,17 @@
 document.  It is based on the pdfgrep program.")
 
 (defun pdfgrep (command-args)
-  "Run Pdfgrep with user-specified COMMAND-ARGS, collect output
-in a buffer. you can use C-x ` (M-x next-error), or RET in the
-*pdfgrep* buffer, to go to the lines where Pdfgrep found matches.
-To kill the Pdfgrep job before it finishes, type C-c C-k."
+  "Run Pdfgrep with user-specified COMMAND-ARGS, collect output in a buffer.
+You can use C-x ` (M-x next-error), or RET in the *pdfgrep*
+buffer, to go to the lines where Pdfgrep found matches.  To kill
+the Pdfgrep job before it finishes, type C-c C-k."
   (interactive (list (read-shell-command "Run pdfgrep (like this): "
 					 (pdfgrep-default-command)
 					 'pdfgrep-history)))
   (compilation-start command-args 'pdfgrep-mode))
 
 (defun pdfgrep-current-page-and-match ()
+  "Return the current match page number and match string."
   (with-current-buffer pdfgrep-buffer-name
     (cons (cadr (compilation--message->loc (compilation-next-error 0)))
 	  (let* ((cur (buffer-substring (line-beginning-position)
@@ -81,6 +87,9 @@ To kill the Pdfgrep job before it finishes, type C-c C-k."
 	    (substring cur start (next-property-change start cur))))))
 
 (defun pdfgrep-goto-locus (msg mk end-mk)
+  "Jump to a match corresponding.
+MSG, MK and END-MK arguments are ignored.  This function is used
+to advice `compilation-goto-locus'."
   (when (and (eq major-mode 'doc-view-mode)
 	     (eq doc-view-doc-type 'pdf))
     (doc-view-goto-page (car (pdfgrep-current-page-and-match))))
@@ -93,3 +102,5 @@ To kill the Pdfgrep job before it finishes, type C-c C-k."
 (advice-add 'compilation-goto-locus :after #'pdfgrep-goto-locus)
 
 (provide 'pdfgrep)
+
+;;; pdfgrep.el ends here
