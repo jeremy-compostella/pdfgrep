@@ -6,7 +6,7 @@
 ;; Created: October 2017
 ;; Keywords: extensions mail pdf grep
 ;; Homepage: https://github.com/jeremy-compostella/pdfgrep
-;; Package-Version: 1.0
+;; Package-Version: 1.1
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; This program is free software; you can redistribute it and/or modify
