@@ -1,0 +1,8 @@
+*pdfgrep* is a [[https://www.gnu.org/software/emacs/][GNU/Emacs]] module providing ~grep~ comparable facilities
+but for PDF files.  Its usage is similar to the ~grep~ function: using
+the ~next-error~ function gets you to the next matching page...
+
+The ~pdfgrep~ program must be installed on your system.
+
+If the [[https://github.com/politza/pdf-tools][pdf-tools]] module is installed and enabled, when a matching page
+is displayed, the matching regions are highlighted.
