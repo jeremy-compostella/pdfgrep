@@ -1,4 +1,4 @@
-;;; pdfgrep.el --- run `pdfgrep' and display the results
+;;; pdfgrep.el --- run `pdfgrep' and display the results. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2017-2018 Jérémy Compostella
 
