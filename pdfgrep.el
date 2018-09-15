@@ -51,7 +51,7 @@
 (defvar pdfgrep-history '()
   "History list for pdfgrep.")
 
-(defvar pdfgrep-program (purecopy "pdfgrep")
+(defvar pdfgrep-program "pdfgrep"
   "The default pdfgrep program.")
 
 (defun pdfgrep-default-command ()
