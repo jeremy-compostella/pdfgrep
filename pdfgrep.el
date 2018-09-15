@@ -86,10 +86,10 @@ the Pdfgrep job before it finishes, type C-c C-k."
 					   'match cur)))
 	    (substring cur start (next-property-change start cur))))))
 
-(defun pdfgrep-goto-locus (msg mk end-mk)
+(defun pdfgrep-goto-locus (_msg _mk _end-mk)
   "Jump to a match corresponding.
-MSG, MK and END-MK arguments are ignored.  This function is used
-to advice `compilation-goto-locus'."
+_MSG, _MK and _END-MK parameters are ignored.  This function is
+used to advice `compilation-goto-locus'."
   (when (and (eq major-mode 'doc-view-mode)
 	     (eq doc-view-doc-type 'pdf))
     (doc-view-goto-page (car (pdfgrep-current-page-and-match))))
