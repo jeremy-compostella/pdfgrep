@@ -107,7 +107,16 @@ used to advice `compilation-goto-locus'."
       (when (cdr meta)
 	(pdf-isearch-hl-matches nil (pdf-isearch-search-page (cdr meta)) t)))))
 
-(advice-add 'compilation-goto-locus :after #'pdfgrep-goto-locus)
+(define-minor-mode pdfgrep-mode
+  "Toggle PDFGrep mode.
+
+With a prefix argument ARG, enable PDFGrep mode if ARG is
+positive, and disable it otherwise.  If called from Lisp, enable
+the mode if ARG is omitted or nil."
+  :global t
+  (if pdfgrep-mode
+      (advice-add 'compilation-goto-locus :after #'pdfgrep-goto-locus)
+    (advice-remove 'compilation-goto-locus #'pdfgrep-goto-locus)))
 
 (provide 'pdfgrep)
 
