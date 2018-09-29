@@ -38,43 +38,51 @@
 
 (defcustom pdfgrep-buffer-name "*pdfgrep*"
   "Pdfgrep search buffer."
-  :group 'pdfgrep)
+  :type '(string))
 
 (defcustom pdfgrep-context-length 100
-  "Pdfgrep default context length, option `-C'."
-  :group 'pdfgrep)
+  "PDFGrep default context length, option `-C'."
+  :type '(integer))
 
 (defcustom pdfgrep-ignore-case t
-  "Pdfgrep ignore case option."
-  :group 'pdfgrep)
+  "PDFGrep ignore case option."
+  :type '(boolean))
+
+(defcustom pdfgrep-ignore-errors nil
+  "Redirect pdfgrep command errors to /dev/null."
+  :type '(boolean))
 
 (defvar pdfgrep-history '()
-  "History list for pdfgrep.")
+  "Command History list for PDFGrep.")
 
 (defvar pdfgrep-program "pdfgrep"
   "The default pdfgrep program.")
 
 (defun pdfgrep-default-command ()
-  "Compute the default pdfgrep command for \\[pdfgrep]."
-  (concat pdfgrep-program " -n "
-	  (when pdfgrep-ignore-case
-	    "-i ")
-	  (when pdfgrep-context-length
-	    (format "-C %d " pdfgrep-context-length))))
-
-(define-derived-mode pdfgrep-mode grep-mode "PdfGrep"
-  "`pdfgrep-mode' is an equivalent of `grep-mode' for PDF
-document.  It is based on the pdfgrep program.")
+  "Compute the default pdfgrep command for `pdfgrep'."
+  (let ((cmd (concat pdfgrep-program " -n "
+		     (when pdfgrep-ignore-case
+		       "-i ")
+		     (when pdfgrep-context-length
+		       (format "-C %d " pdfgrep-context-length)))))
+    (if pdfgrep-ignore-errors
+	(cons (concat cmd " 2>/dev/null") (1+ (length cmd)))
+      cmd)))
 
 (defun pdfgrep (command-args)
-  "Run Pdfgrep with user-specified COMMAND-ARGS, collect output in a buffer.
-You can use C-x ` (M-x next-error), or RET in the *pdfgrep*
-buffer, to go to the lines where Pdfgrep found matches.  To kill
-the Pdfgrep job before it finishes, type C-c C-k."
+  "Run pdfgrep with user-specified COMMAND-ARGS, collect output in a buffer.
+You can use \\[next-error], or RET in the `pdfgrep-buffer-name'
+buffer, to go to the lines where PDFGrep found matches.  To kill
+the PDFGrep job before it finishes, type \\[kill-compilation]."
   (interactive (list (read-shell-command "Run pdfgrep (like this): "
 					 (pdfgrep-default-command)
 					 'pdfgrep-history)))
-  (compilation-start command-args 'pdfgrep-mode))
+  (unless pdfgrep-mode
+    (error "PDFGrep is not enabled, run `pdfgrep-mode' first."))
+  (unless (executable-find "pdfgrep")
+    (error "The 'pdfgrep' command not available on your system."))
+  (compilation-start command-args 'grep-mode
+		     (lambda (_x) pdfgrep-buffer-name)))
 
 (defun pdfgrep-current-page-and-match ()
   "Return the current match page number and match string."
