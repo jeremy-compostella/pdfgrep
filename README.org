@@ -8,3 +8,10 @@ The ~pdfgrep~ program must be installed on your system.
 
 If the [[https://github.com/politza/pdf-tools][pdf-tools]] module is installed and enabled, when a matching page
 is displayed, the matching regions are highlighted.
+
+* Configuration
+
+#+begin_src emacs-lisp
+(require 'pdfgrep)
+(pdfgrep-mode)
+#+end_src
