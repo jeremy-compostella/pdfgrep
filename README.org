@@ -15,3 +15,7 @@ is displayed, the matching regions are highlighted.
 (require 'pdfgrep)
 (pdfgrep-mode)
 #+end_src
+
+* Example
+
+[[./screenshot.png]]
