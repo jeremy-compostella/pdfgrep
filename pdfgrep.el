@@ -60,7 +60,7 @@
 
 (defun pdfgrep-default-command ()
   "Compute the default pdfgrep command for `pdfgrep'."
-  (let ((cmd (concat pdfgrep-program " -n "
+  (let ((cmd (concat pdfgrep-program " -H -n "
 		     (when pdfgrep-ignore-case
 		       "-i ")
 		     (when pdfgrep-context-length
