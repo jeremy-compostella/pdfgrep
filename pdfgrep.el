@@ -40,10 +40,6 @@
   "Pdfgrep search buffer."
   :type '(string))
 
-(defcustom pdfgrep-context-length 100
-  "PDFGrep default context length, option `-C'."
-  :type '(integer))
-
 (defcustom pdfgrep-ignore-case t
   "PDFGrep ignore case option."
   :type '(boolean))
@@ -62,9 +58,7 @@
   "Compute the default pdfgrep command for `pdfgrep'."
   (let ((cmd (concat pdfgrep-program " -H -n "
 		     (when pdfgrep-ignore-case
-		       "-i ")
-		     (when pdfgrep-context-length
-		       (format "-C %d " pdfgrep-context-length)))))
+		       "-i "))))
     (if pdfgrep-ignore-errors
 	(cons (concat cmd " 2>/dev/null") (1+ (length cmd)))
       cmd)))
