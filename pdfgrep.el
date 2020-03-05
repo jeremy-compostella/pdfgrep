@@ -44,6 +44,11 @@
   "PDFGrep ignore case option."
   :type '(boolean))
 
+(defcustom pdfgrep-options " -H -n "
+  "Default options appended to `pdfgrep-program' when invoking the command.
+Not including `pdfgrep-ignore-case'."
+  :type '(string))
+
 (defcustom pdfgrep-ignore-errors nil
   "Redirect pdfgrep command errors to /dev/null."
   :type '(boolean))
@@ -56,7 +61,7 @@
 
 (defun pdfgrep-default-command ()
   "Compute the default pdfgrep command for `pdfgrep'."
-  (let ((cmd (concat pdfgrep-program " -H -n "
+  (let ((cmd (concat pdfgrep-program pdfgrep-options
 		     (when pdfgrep-ignore-case
 		       "-i "))))
     (if pdfgrep-ignore-errors
