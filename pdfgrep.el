@@ -68,21 +68,6 @@ Not including `pdfgrep-ignore-case'."
 	(cons (concat cmd " 2>/dev/null") (1+ (length cmd)))
       cmd)))
 
-(defun pdfgrep (command-args)
-  "Run pdfgrep with user-specified COMMAND-ARGS, collect output in a buffer.
-You can use \\[next-error], or RET in the `pdfgrep-buffer-name'
-buffer, to go to the lines where PDFGrep found matches.  To kill
-the PDFGrep job before it finishes, type \\[kill-compilation]."
-  (interactive (list (read-shell-command "Run pdfgrep (like this): "
-					 (pdfgrep-default-command)
-					 'pdfgrep-history)))
-  (unless pdfgrep-mode
-    (error "PDFGrep is not enabled, run `pdfgrep-mode' first."))
-  (unless (executable-find "pdfgrep")
-    (error "The 'pdfgrep' command not available on your system."))
-  (compilation-start command-args 'grep-mode
-		     (lambda (_x) pdfgrep-buffer-name)))
-
 (defun pdfgrep-current-page-and-match ()
   "Return the current match page number and match string."
   (with-current-buffer pdfgrep-buffer-name
@@ -92,6 +77,13 @@ the PDFGrep job before it finishes, type \\[kill-compilation]."
 		 (start (text-property-any 0 (length cur) 'font-lock-face
 					   'match cur)))
 	    (substring cur start (next-property-change start cur))))))
+
+(defvar doc-view-doc-type)
+(declare-function doc-view-goto-page "doc-view")
+
+(declare-function pdf-view-goto-page "ext:pdf-view")
+(declare-function pdf-isearch-hl-matches "ext:pdf-isearch")
+(declare-function pdf-isearch-search-page "ext:pdf-isearch")
 
 (defun pdfgrep-goto-locus (_msg _mk _end-mk)
   "Jump to a match corresponding.
@@ -116,6 +108,21 @@ the mode if ARG is omitted or nil."
   (if pdfgrep-mode
       (advice-add 'compilation-goto-locus :after #'pdfgrep-goto-locus)
     (advice-remove 'compilation-goto-locus #'pdfgrep-goto-locus)))
+
+(defun pdfgrep (command-args)
+  "Run pdfgrep with user-specified COMMAND-ARGS, collect output in a buffer.
+You can use \\[next-error], or RET in the `pdfgrep-buffer-name'
+buffer, to go to the lines where PDFGrep found matches.  To kill
+the PDFGrep job before it finishes, type \\[kill-compilation]."
+  (interactive (list (read-shell-command "Run pdfgrep (like this): "
+					 (pdfgrep-default-command)
+					 'pdfgrep-history)))
+  (unless pdfgrep-mode
+    (error "PDFGrep is not enabled, run `pdfgrep-mode' first."))
+  (unless (executable-find "pdfgrep")
+    (error "The 'pdfgrep' command not available on your system."))
+  (compilation-start command-args 'grep-mode
+		     (lambda (_x) pdfgrep-buffer-name)))
 
 (provide 'pdfgrep)
 
