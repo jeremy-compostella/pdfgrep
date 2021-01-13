@@ -98,6 +98,7 @@ used to advice `compilation-goto-locus'."
       (when (cdr meta)
 	(pdf-isearch-hl-matches nil (pdf-isearch-search-page (cdr meta)) t)))))
 
+;;;###autoload
 (define-minor-mode pdfgrep-mode
   "Toggle PDFGrep mode.
 
