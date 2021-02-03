@@ -83,9 +83,9 @@ the PDFGrep job before it finishes, type \\[kill-compilation]."
   (compilation-start command-args 'grep-mode
 		     (lambda (_x) pdfgrep-buffer-name)))
 
-(defun pdfgrep-current-page-and-match ()
+(defun pdfgrep-current-page-and-match (buffer)
   "Return the current match page number and match string."
-  (with-current-buffer pdfgrep-buffer-name
+  (with-current-buffer buffer
     (cons (cadr (compilation--message->loc (compilation-next-error 0)))
 	  (let* ((cur (buffer-substring (line-beginning-position)
 					(line-end-position)))
@@ -93,18 +93,19 @@ the PDFGrep job before it finishes, type \\[kill-compilation]."
 					   'match cur)))
 	    (substring cur start (next-property-change start cur))))))
 
-(defun pdfgrep-goto-locus (_msg _mk _end-mk)
+(defun pdfgrep-goto-locus (msg _mk _end-mk)
   "Jump to a match corresponding.
-_MSG, _MK and _END-MK parameters are ignored.  This function is
+MSG, _MK and _END-MK parameters are ignored.  This function is
 used to advice `compilation-goto-locus'."
-  (when (and (eq major-mode 'doc-view-mode)
-	     (eq doc-view-doc-type 'pdf))
-    (doc-view-goto-page (car (pdfgrep-current-page-and-match))))
-  (when (eq major-mode 'pdf-view-mode)
-    (let ((meta (pdfgrep-current-page-and-match)))
-      (pdf-view-goto-page (car meta))
-      (when (cdr meta)
-	(pdf-isearch-hl-matches nil (pdf-isearch-search-page (cdr meta)) t)))))
+  (let ((buffer (marker-buffer msg)))
+    (when (and (eq major-mode 'doc-view-mode)
+	       (eq doc-view-doc-type 'pdf))
+      (doc-view-goto-page (car (pdfgrep-current-page-and-match buffer))))
+    (when (eq major-mode 'pdf-view-mode)
+      (let ((meta (pdfgrep-current-page-and-match buffer)))
+	(pdf-view-goto-page (car meta))
+	(when (cdr meta)
+	  (pdf-isearch-hl-matches nil (pdf-isearch-search-page (cdr meta)) t))))))
 
 (define-minor-mode pdfgrep-mode
   "Toggle PDFGrep mode.
