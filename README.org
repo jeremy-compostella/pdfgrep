@@ -16,6 +16,12 @@ is displayed, the matching regions are highlighted.
 (pdfgrep-mode)
 #+end_src
 
+* Running tests
+
+  #+begin_src bash
+emacs --batch -l pdfgrep.el -l pdfgrep-tests.el -f ert-run-tests-batch-and-exit
+  #+end_src
+
 * Example
 
 [[./screenshot.png]]

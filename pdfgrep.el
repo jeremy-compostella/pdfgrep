@@ -61,11 +61,19 @@ Not including `pdfgrep-ignore-case'."
 
 (defun pdfgrep-default-command ()
   "Compute the default pdfgrep command for `pdfgrep'."
-  (let ((cmd (concat pdfgrep-program pdfgrep-options
-		     (when pdfgrep-ignore-case
-		       "-i "))))
+  (let* ((supported-major-modes '(pdf-view-mode doc-view-mode))
+         (is-in-supported-major-mode (member major-mode supported-major-modes))
+         (cmd (concat pdfgrep-program pdfgrep-options
+		              (when pdfgrep-ignore-case
+		                "-i ")
+                      (when is-in-supported-major-mode
+                        buffer-file-name))))
     (if pdfgrep-ignore-errors
-	(cons (concat cmd " 2>/dev/null") (1+ (length cmd)))
+        (let ((cmd-ignore-errors (concat cmd " 2>/dev/null")))
+	      (cons cmd-ignore-errors
+                (if is-in-supported-major-mode
+                    (+ 1 (length cmd-ignore-errors)) ;; we already inserted the file name, set position end of cmd
+                  (1+ (length cmd))))) ;; position at FILE position
       cmd)))
 
 (defun pdfgrep (command-args)
