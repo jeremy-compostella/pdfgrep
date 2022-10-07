@@ -91,7 +91,8 @@ the PDFGrep job before it finishes, type \\[kill-compilation]."
 					(line-end-position)))
 		 (start (text-property-any 0 (length cur) 'font-lock-face
 					   'match cur)))
-	    (substring cur start (next-property-change start cur))))))
+            (if start
+	        (substring cur start (next-property-change start cur)))))))
 
 (defun pdfgrep-goto-locus (msg _mk _end-mk)
   "Jump to a match corresponding.
